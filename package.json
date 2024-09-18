@@ -3,22 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3045",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3045",
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.6",
+    "@nextui-org/system": "^2.2.5",
+    "@nextui-org/theme": "^2.2.9",
+    "axios": "^1.7.2",
+    "framer-motion": "^11.5.4",
+    "js-cookie": "^3.0.5",
+    "next": "14.2.4",
+    "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.4"
+    "react-hook-form": "^7.53.0",
+    "react-icons": "^5.2.1",
+    "react-query": "^3.39.3",
+    "react-quill": "^2.0.0",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
