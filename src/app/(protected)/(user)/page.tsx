@@ -16,6 +16,7 @@ import {
 import { Button, DateInput, Select, SelectItem } from "@nextui-org/react";
 import ArticleForm from "@/components/protected/forms/ArticleForm";
 import ArticlePublishingForm from "@/components/protected/forms/ArticlePublishing";
+import { useRouter } from "next/navigation";
 
 const modules = {
   toolbar: [
@@ -32,20 +33,21 @@ const modules = {
   ],
 };
 
-const websiteLinkMutation: any = {
-  data: {
-    data: {
-      link: "yessir",
-      title: "yessir",
-      summary: {
-        relevanceIndex: "0.95",
-      },
-      rewriteArticle: {
-        relevanceIndex: "0.95",
-      },
-    },
-  },
-};
+// const websiteLinkMutation: any = {
+//   data: {
+//     data: {
+//       link: "yessir",
+//       title: "yessir",
+//       summary: {
+//         relevanceIndex: "0.95",
+//       },
+//       rewriteArticle: {
+//         relevanceIndex: "0.95",
+//       },
+//       relevanceIndex:0.5
+//     },
+//   },
+// };
 
 const formats = [
   "header",
@@ -63,19 +65,16 @@ const formats = [
 
 const animals = [{ key: "1", label: "https://rias-aero.com" }];
 
-type ScheduleData = {
-  title: String;
-  domain: string;
-  article: String;
-  scheduleDate: string;
-};
+
 
 export default function Home() {
   // const session = useSession()
+  const router=useRouter()
   // console.log(session)
   const [originalArticle, setOriginalArticle] = useState("");
   const [rewrittenArticle, setRewrittenArticle] = useState("");
   const [summaryArticle, setSummaryArticle] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -86,65 +85,39 @@ export default function Home() {
       keywords: "",
     },
   });
+  
 
-  const publishMutation = useMutation(
-    (data: any) => axiosInstance.post("/article/publish", data),
-    {
-      onSuccess(data, variables, context) {
-        console.log("publish", data.data);
+
+  const websiteLinkMutation = useMutation((data: any) => axiosInstance.post('/url', data), {
+      onSuccess(data) {
+          console.log(data.data)
+          setSummaryArticle(data.data.summary.rewrittenArticle)
+          setRewrittenArticle(data.data.rewriteArticle.rewrittenArticle)
+          setOriginalArticle(data.data.originalArticle)
+          // console.log(data.data.)
       },
-    }
-  );
-
-  const scheduleMutation = useMutation((data: ScheduleData) =>
-    axiosInstance.post("/api/article/schedule", data)
-  );
-  // const websiteLinkMutation = useMutation((data: any) => axiosInstance.post('/url', data), {
-  //     onSuccess(data) {
-  //         console.log(data.data)
-  //         setSummaryArticle(data.data.summary.rewrittenArticle)
-  //         setRewrittenArticle(data.data.rewriteArticle.rewrittenArticle)
-  //         setOriginalArticle(data.data.originalArticle)
-  //         // console.log(data.data.)
-  //     },
-  // })
+  })
 
   function onSubmit(data: FieldValues) {
     websiteLinkMutation.mutate(data);
     // form.reset()
   }
 
-  function scheduleSubmit(data: FieldValues) {
-    const date = new Date(
-      data.date.year,
-      data.date.month,
-      data.date.day,
-      data.date.hour
-    ).toLocaleDateString();
-    const payload = {
-      ...data,
-      scheduleDate: date,
-    } as ScheduleData;
-    scheduleMutation.mutate(payload);
-    console.log("schedule", payload);
-  }
 
-  const publishSubmit = (data: FieldValues) => {
-    console.log("publishData", data);
-    publishMutation.mutate(data);
-  };
+
+  
 
   return (
     <>
-      <div className="w-full m-auto h-auto flex items-center pb-4">
+      <div className="w-full  h-auto flex items-center justify-center pb-4">
         {!websiteLinkMutation.data && (
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col w-full gap-8"
+            className="flex flex-col w-full items-center gap-8"
           >
             {!websiteLinkMutation.isLoading && (
               <>
-                <div className="flex flex-col  gap-4">
+                <div className="flex flex-col w-full gap-4">
                   <h1>Keywords</h1>
                   <div className="flex flex-col gap-2">
                     <input
@@ -157,7 +130,7 @@ export default function Home() {
                     <p className="text-red-500">{errors.keywords?.message} </p>
                   </div>
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col w-full gap-4">
                   <h1>Website Url</h1>
                   <div className="flex flex-col gap-2">
                     <input
@@ -183,9 +156,8 @@ export default function Home() {
             )}
           </form>
         )}
-
-        <div>
-          {websiteLinkMutation.data?.data && (
+        {websiteLinkMutation.data?.data && <div className="w-full">
+          {websiteLinkMutation.data?.data && Number(websiteLinkMutation.data.data.relevanceIndex)>=0.6 && (
             <div className="flex gap-4 flex-wrap">
               <a
                 className="underline"
@@ -211,16 +183,16 @@ export default function Home() {
                   <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
                     <h1 className="font-semibold">Publish Now</h1>
                     <ArticlePublishingForm
-                      isSubmitting={publishMutation.isLoading}
+                    //   isSubmitting={publishMutation.isLoading}
                       article={originalArticle}
-                      publishSubmit={publishSubmit}
+                    //   publishSubmit={publishSubmit}
                     />
                   </div>
                   <div>
                     <h1 className="font-semibold">Schedule For Publishing</h1>
                     <ArticleForm
                       article={originalArticle}
-                      scheduleSubmit={scheduleSubmit}
+                    //   scheduleSubmit={scheduleSubmit}
                     />
                   </div>
                 </div>
@@ -229,7 +201,7 @@ export default function Home() {
               <div className="flex sm:flex-nowrap flex-wrap p-4 rounded-lg bg-white w-full text-black gap-4">
                 <div className="flex flex-col gap-2 w-full sm:w-1/2">
                   <p>Rewritten Article</p>
-                  <div className="flex gap-2">
+                  {/* <div className="flex gap-2">
                     <p>Relevance Index :</p>
                     <p>
                       {
@@ -237,7 +209,7 @@ export default function Home() {
                           .relevanceIndex
                       }
                     </p>
-                  </div>
+                  </div> */}
                   <ReactQuill
                     theme="snow"
                     formats={formats}
@@ -252,16 +224,16 @@ export default function Home() {
                   <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
                     <h1 className="font-semibold">Publish Now</h1>
                     <ArticlePublishingForm
-                      isSubmitting={publishMutation.isLoading}
+                    //   isSubmitting={publishMutation.isLoading}
                       article={rewrittenArticle}
-                      publishSubmit={publishSubmit}
+                    //   publishSubmit={publishSubmit}
                     />
                   </div>
                   <div>
                     <h1 className="font-semibold">Schedule For Publishing</h1>
                     <ArticleForm
                       article={rewrittenArticle}
-                      scheduleSubmit={scheduleSubmit}
+                    //   scheduleSubmit={scheduleSubmit}
                     />
                   </div>
                 </div>
@@ -272,12 +244,12 @@ export default function Home() {
                 <div className="flex flex-col gap-2 w-full sm:w-1/2">
                   <div className="flex  gap-4">
                     <p>Summary Article</p>
-                    <div className="flex  gap-2">
+                    {/* <div className="flex  gap-2">
                       <p>Relevance Index: </p>
                       <p>
                         {websiteLinkMutation.data.data.summary.relevanceIndex}
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                   <ReactQuill
                     theme="snow"
@@ -293,16 +265,16 @@ export default function Home() {
                   <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
                     <h1 className="font-semibold">Publish Now</h1>
                     <ArticlePublishingForm
-                      isSubmitting={publishMutation.isLoading}
+                    //   isSubmitting={publishMutation.isLoading}
                       article={summaryArticle}
-                      publishSubmit={publishSubmit}
+                    //   publishSubmit={publishSubmit}
                     />
                   </div>
                   <div>
                     <h1 className="font-semibold">Schedule For Publishing</h1>
                     <ArticleForm
                       article={summaryArticle}
-                      scheduleSubmit={scheduleSubmit}
+                    //   scheduleSubmit={scheduleSubmit}
                     />
                   </div>
                 </div>
@@ -311,7 +283,13 @@ export default function Home() {
               </div>
             </div>
           )}
-        </div>
+          {websiteLinkMutation.data?.data && Number(websiteLinkMutation.data.data.relevanceIndex)<0.6 && 
+          <div className="flex flex-col gap-4 items-center  w-full">
+            <p>Data Relevance Index is below 0.6</p>
+            <Button onClick={()=>router.refresh()} className="px-8 py-2 rounded-lg bg-blue-500 min-w-[15rem] text-white">Restart</Button>
+          </div>
+          }
+        </div>}
       </div>
     </>
   );

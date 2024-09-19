@@ -11,7 +11,9 @@ import {
   Button,
 } from "@nextui-org/react";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { MdDelete } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const rows = [
   {
@@ -65,11 +67,43 @@ const columns = [
     key: "scheduleDate",
     label: "Schedule Date",
   },
+  {
+    key: "actions",
+    label: "Actions",
+  },
 ];
 
 export default function App() {
   const [page, setPage] = useState(1);
   const [tableData, setTableData] = useState([]);
+  const queryClient=useQueryClient()
+  const deleteScheduleMutation=useMutation((id:string)=>axiosInstance.delete(`/article/scheduleArticle?id=${id}`),{
+    onSuccess(data, variables, context) {
+      toast.success('Article Schedule Deleted Successfully', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    })
+    queryClient.invalidateQueries('scheduledArticles')
+    },
+    onError(error:any) {
+      toast.error('Error In Deleting Scheduled Article', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    })
+    },
+  })
   const { isLoading, data, isFetching } = useQuery(
     ["scheduledArticles", page],
     ({ queryKey }) =>
@@ -78,13 +112,6 @@ export default function App() {
       ),
     {
       onSuccess(data) {
-        //         _id: "66eb046bb695682b3455d314"
-        // title: "My Article"
-        // scheduleDate: "2024-09-17T19:00:00.000Z"
-        // content: "This is Article"
-        // domain: "domain@domain.com"
-        // createdAt: "2024-09-18T16:48:43.987Z"
-        // updatedAt: "2024-09-18T16:48:43.987Z"
         const newData = data.data.data.map((e: any, index: number) => {
           return {
             ...e,
@@ -112,6 +139,16 @@ export default function App() {
               <TableRow key={item.no}>
                 {(columnKey) => {
                   // console.log(columnKey, item);
+                  if(columnKey=='actions'){
+                    return (
+                      <TableCell className="text-black">
+                        <Button isLoading={deleteScheduleMutation.isLoading} disabled={deleteScheduleMutation.isLoading} onClick={()=>deleteScheduleMutation.mutate(item._id)} className="bg-red-100">
+                        <MdDelete className="text-xl text-red-600" /></Button>
+                       {/* {item._id} */}
+                        {/* {getKeyValue(item, columnKey)} */}
+                      </TableCell>
+                    );
+                  }
                   if (item[columnKey]) {
                     return (
                       <TableCell className="text-black">
