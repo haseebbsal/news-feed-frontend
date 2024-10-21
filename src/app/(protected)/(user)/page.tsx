@@ -3,8 +3,11 @@ import axiosInstance from "@/utils/axiosInstance";
 import { FormEvent, useState } from "react";
 import { useMutation } from "react-query";
 import { ImSpinner2 } from "react-icons/im";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+import 'react-quill-new/dist/quill.snow.css';
+// import "react-quill/dist/quill.snow.css";
 import {
   Controller,
   ControllerFieldState,
