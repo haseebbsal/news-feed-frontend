@@ -23,7 +23,9 @@ export default function AdminNavbar() {
     const individualQuery = useQuery(['individual'], () => axiosInstance.get('/user/individual'))
     const logoutMutation = useMutation(() => axiosInstance.post('/logout'), {
         onSuccess(data) {
-            navigate.replace('/login')
+      window.location.href='/login'
+
+            // navigate.replace('/login')
         },
     })
     function Logout() {
