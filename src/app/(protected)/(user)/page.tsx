@@ -107,6 +107,7 @@ export default function Home() {
   }
 
 
+  console.log('relevance',Number(websiteLinkMutation.data?.data.relevanceIndex))
 
   
 
