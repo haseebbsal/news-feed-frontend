@@ -93,5 +93,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin", "/scheduled-articles"],
+  matcher: ["/", "/admin", "/scheduled-articles/:path*","/settings"],
 };
