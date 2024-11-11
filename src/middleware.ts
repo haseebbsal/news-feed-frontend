@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const userPaths = ["/", "/scheduled-articles"];
+const userPaths = ["/", "/scheduled-articles","/settings"];
 export default async function middleware(request: NextRequest) {
   console.log("pathname", request.nextUrl.pathname);
   const cookiesIntialise = cookies();
