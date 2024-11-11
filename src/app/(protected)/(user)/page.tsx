@@ -1,25 +1,19 @@
 "use client";
 import axiosInstance from "@/utils/axiosInstance";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "react-query";
-import { ImSpinner2 } from "react-icons/im";
-// import ReactQuill from "react-quill";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
-// import "react-quill/dist/quill.snow.css";
 import {
-  Controller,
-  ControllerFieldState,
-  Field,
   FieldValues,
-  useController,
   useForm,
 } from "react-hook-form";
-import { Button, DateInput, Select, SelectItem } from "@nextui-org/react";
-import ArticleForm from "@/components/protected/forms/ArticleForm";
+import { Button, Input } from "@nextui-org/react";
 import ArticlePublishingForm from "@/components/protected/forms/ArticlePublishing";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Article from "@/components/protected/forms/Article";
 
 const modules = {
   toolbar: [
@@ -36,21 +30,21 @@ const modules = {
   ],
 };
 
-// const websiteLinkMutation: any = {
-//   data: {
-//     data: {
-//       link: "yessir",
-//       title: "yessir",
-//       summary: {
-//         relevanceIndex: "0.95",
-//       },
-//       rewriteArticle: {
-//         relevanceIndex: "0.95",
-//       },
-//       relevanceIndex:0.5
-//     },
-//   },
-// };
+const websiteLinkMutation: any = {
+  data: {
+    data: {
+      link: "yessir",
+      title: "yessir",
+      summary: {
+        relevanceIndex: "0.95",
+      },
+      rewriteArticle: {
+        relevanceIndex: "0.95",
+      },
+      relevanceIndex: 0.7
+    },
+  },
+};
 
 const formats = [
   "header",
@@ -71,34 +65,49 @@ const animals = [{ key: "1", label: "https://rias-aero.com" }];
 
 
 export default function Home() {
-  // const session = useSession()
-  const router=useRouter()
-  // console.log(session)
-  const [originalArticle, setOriginalArticle] = useState("");
-  const [rewrittenArticle, setRewrittenArticle] = useState("");
-  const [summaryArticle, setSummaryArticle] = useState("");
+  const [data, setData] = useState<any>()
+  const router = useRouter()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      url: "",
-      keywords: "",
-    },
-  });
-  
+  } = useForm();
 
 
   const websiteLinkMutation = useMutation((data: any) => axiosInstance.post('/url', data), {
-      onSuccess(data) {
-          console.log(data.data)
-          setSummaryArticle(data.data.summary.rewrittenArticle)
-          setRewrittenArticle(data.data.rewriteArticle.rewrittenArticle)
-          setOriginalArticle(data.data.originalArticle)
-          // console.log(data.data.)
-      },
+    onSuccess(data) {
+      console.log(data.data)
+      setData(data.data)
+    },
+    onError(error:any) {
+      const {message,data}=error.response.data
+      console.log(data)
+      if(!message){
+        toast.error(data[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      }
+      else{
+        toast.error('Article Relevance Index is Low', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+      }
+    },
   })
 
   function onSubmit(data: FieldValues) {
@@ -106,193 +115,76 @@ export default function Home() {
     // form.reset()
   }
 
-
-  console.log('relevance',Number(websiteLinkMutation.data?.data.relevanceIndex))
-
-  
-
   return (
     <>
       <div className="w-full  h-auto flex items-center justify-center pb-4">
-        {!websiteLinkMutation.data && (
+        {!data && (
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col w-full items-center gap-8"
           >
-            {!websiteLinkMutation.isLoading && (
-              <>
-                <div className="flex flex-col w-full gap-4">
-                  <h1>Keywords</h1>
-                  <div className="flex flex-col gap-2">
-                    <input
-                      type="text"
-                      {...register("keywords", { required: "Enter Keywords" })}
-                      id="url"
-                      className="text-black py-2 "
-                      placeholder="Enter Keywords"
-                    />
-                    <p className="text-red-500">{errors.keywords?.message} </p>
-                  </div>
-                </div>
-                <div className="flex flex-col w-full gap-4">
-                  <h1>Website Url</h1>
-                  <div className="flex flex-col gap-2">
-                    <input
-                      type="text"
-                      {...register("url", { required: "Enter Website Url" })}
-                      id="url"
-                      className="text-black py-2 "
-                      placeholder="Enter Website News URL"
-                    />
-                    <p className="text-red-500">{errors.url?.message} </p>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full  px-4 py-2 bg-white rounded-xl text-black "
-                >
-                  Submit
-                </button>
-              </>
-            )}
-            {websiteLinkMutation.isLoading && (
-              <ImSpinner2 className="animate-spin text-[8rem] m-auto" />
-            )}
+            <Input
+            isInvalid={!!errors.keywords}
+            errorMessage={errors.keywords?.message as any}
+              label="Keywords"
+              labelPlacement="outside"
+              classNames={{ label: "!text-white" }}
+              type="text"
+              {...register("keywords", { required: "Enter Keywords" })}
+              id="url"
+              placeholder="Enter Keywords"
+            />
+            <Input
+             isInvalid={!!errors.url}
+             errorMessage={errors.url?.message as any}
+              label="Article Url"
+              labelPlacement="outside"
+              classNames={{ label: "!text-white" }}
+              type="text"
+              {...register("url", { required: "Enter Article Url" })}
+              id="url"
+              placeholder="Enter Article URL"
+            />
+            <Input
+             isInvalid={!!errors.relevanceIndex}
+             errorMessage={errors.relevanceIndex?.message as any}
+              label="Relevance Index Score"
+              labelPlacement="outside"
+              classNames={{ label: "!text-white" }}
+              type="number"
+              min="0"
+              max={"1"}
+              step={"0.01"}
+              {...register("relevanceIndex", { required: "Enter Relevance Index Score" })}
+              id="url"
+              placeholder="Enter Relevance Index Score"
+            />
+            <Button
+              isLoading={websiteLinkMutation.isLoading}
+              isDisabled={websiteLinkMutation.isLoading}
+              type="submit"
+              className="w-full  px-4  bg-white rounded-xl text-black "
+            >
+              Submit
+            </Button>
           </form>
         )}
-        {websiteLinkMutation.data?.data && <div className="w-full">
-          {websiteLinkMutation.data?.data && Number(websiteLinkMutation.data.data.relevanceIndex)>=0.6 && (
-            <div className="flex gap-4 flex-wrap">
-              <a
-                className="underline"
-                target="_blank"
-                href={`${websiteLinkMutation.data.data.link}`}
-              >
-                {websiteLinkMutation.data.data.title}
-              </a>
-              <div className="flex p-4 rounded-lg bg-white text-black w-full sm:flex-nowrap flex-wrap gap-4">
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <p>Original Article</p>
-                  <ReactQuill
-                    theme="snow"
-                    formats={formats}
-                    modules={modules}
-                    value={originalArticle}
-                    onChange={(e) => {
-                      setOriginalArticle(e);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
-                    <h1 className="font-semibold">Publish Now</h1>
-                    <ArticlePublishingForm
-                    //   isSubmitting={publishMutation.isLoading}
-                      article={originalArticle}
-                    //   publishSubmit={publishSubmit}
-                    />
-                  </div>
-                  <div>
-                    <h1 className="font-semibold">Schedule For Publishing</h1>
-                    <ArticleForm
-                      article={originalArticle}
-                    //   scheduleSubmit={scheduleSubmit}
-                    />
-                  </div>
-                </div>
-                {/* <p id="article" contentEditable className=" h-[20rem] p-4 overflow-auto">{websiteLinkMutation.data.data.originalArticle}</p> */}
-              </div>
-              <div className="flex sm:flex-nowrap flex-wrap p-4 rounded-lg bg-white w-full text-black gap-4">
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <p>Rewritten Article</p>
-                  {/* <div className="flex gap-2">
-                    <p>Relevance Index :</p>
-                    <p>
-                      {
-                        websiteLinkMutation.data.data.rewriteArticle
-                          .relevanceIndex
-                      }
-                    </p>
-                  </div> */}
-                  <ReactQuill
-                    theme="snow"
-                    formats={formats}
-                    modules={modules}
-                    value={rewrittenArticle}
-                    onChange={(e) => {
-                      setRewrittenArticle(e);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
-                    <h1 className="font-semibold">Publish Now</h1>
-                    <ArticlePublishingForm
-                    //   isSubmitting={publishMutation.isLoading}
-                      article={rewrittenArticle}
-                    //   publishSubmit={publishSubmit}
-                    />
-                  </div>
-                  <div>
-                    <h1 className="font-semibold">Schedule For Publishing</h1>
-                    <ArticleForm
-                      article={rewrittenArticle}
-                    //   scheduleSubmit={scheduleSubmit}
-                    />
-                  </div>
-                </div>
-
-                {/* <p id="rewritten_article" contentEditable className=" h-[20rem] p-4 overflow-auto ">{websiteLinkMutation.data.data.rewriteArticle.rewrittenArticle}</p> */}
-              </div>
-              <div className="flex sm:flex-nowrap flex-wrap p-4 rounded-lg bg-white w-full text-black gap-4">
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <div className="flex  gap-4">
-                    <p>Summary Article</p>
-                    {/* <div className="flex  gap-2">
-                      <p>Relevance Index: </p>
-                      <p>
-                        {websiteLinkMutation.data.data.summary.relevanceIndex}
-                      </p>
-                    </div> */}
-                  </div>
-                  <ReactQuill
-                    theme="snow"
-                    formats={formats}
-                    modules={modules}
-                    value={summaryArticle}
-                    onChange={(e) => {
-                      setSummaryArticle(e);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-2 w-full sm:w-1/2">
-                  <div className="flex items-start gap-1 border-b-2 pb-4 flex-col">
-                    <h1 className="font-semibold">Publish Now</h1>
-                    <ArticlePublishingForm
-                    //   isSubmitting={publishMutation.isLoading}
-                      article={summaryArticle}
-                    //   publishSubmit={publishSubmit}
-                    />
-                  </div>
-                  <div>
-                    <h1 className="font-semibold">Schedule For Publishing</h1>
-                    <ArticleForm
-                      article={summaryArticle}
-                    //   scheduleSubmit={scheduleSubmit}
-                    />
-                  </div>
-                </div>
-
-                {/* <p id="summary_article" contentEditable className=" h-[20rem] p-4 overflow-auto">{websiteLinkMutation.data.data.summary.rewrittenArticle}</p> */}
-              </div>
+        {data && <div className="w-full">
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex justify-between w-full items-center flex-wrap gap-4">
+            <a
+              className="underline"
+              target="_blank"
+              href={`${data.link}`}
+            >
+              {data.title}
+            </a>
+            <Button onClick={()=>setData(null)} className="bg-blue-400 sm:w-max w-full text-white">Back</Button>
             </div>
-          )}
-          {websiteLinkMutation.data?.data && Number(websiteLinkMutation.data.data.relevanceIndex)<0.6 && 
-          <div className="flex flex-col gap-4 items-center  w-full">
-            <p>Data Relevance Index is below 0.6</p>
-            <Button onClick={()=>router.refresh()} className="px-8 py-2 rounded-lg bg-blue-500 min-w-[15rem] text-white">Restart</Button>
+            <Article text="Original Article" articleUrl={data.link} value={data.original}/>
+            <Article text="Rewritten Article" articleUrl={data.link} value={data.rewritten}/>
+            <Article text="Summary Article" articleUrl={data.link} value={data.summary}/>
           </div>
-          }
         </div>}
       </div>
     </>

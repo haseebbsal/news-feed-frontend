@@ -8,6 +8,8 @@ import Cookies from "js-cookie";
 import { ImSpinner2 } from "react-icons/im";
 import { CiUser } from "react-icons/ci";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button } from "@nextui-org/react";
 type UserInfo = {
   _id: string;
   email: string;
@@ -15,10 +17,19 @@ type UserInfo = {
 };
 export default function Navbar() {
   const navigate = useRouter();
-  let userData: UserInfo = { username: "", email: "", _id: "" };
-  if (Cookies.get("userData")) {
-    userData = JSON.parse(Cookies.get("userData")!);
-  }
+  let [userData,setUserData]=useState< UserInfo|null>(null)
+
+  // console.log('cookies',Cookies)
+  // if (Cookies.get("userData")) {
+  //   userData = JSON.parse(Cookies.get("userData")!);
+  // }
+
+
+  useEffect(()=>{
+    if (Cookies.get('userData')) {
+        setUserData(JSON.parse(Cookies.get('userData')!))
+    }
+},[])
   // console.log('user data',userData)
   const individualQuery = useQuery(["individual"], () =>
     axiosInstance.get("/user/individual")
@@ -41,23 +52,23 @@ export default function Navbar() {
               News Article Generator
             </Link>
             <div className="flex items-center gap-4">
-              <Link href={"/scheduled-articles"}>Scheduled Articles</Link>
+            <Link href={"/settings"}>Settings</Link>
+
+              <Link href={"/scheduled-articles"}>Published Articles</Link>
               {userData && (
                 <div className="flex gap-4 items-center">
                   <p>{userData.username}</p>
                   <CiUser className="p-2 bg-black rounded-full text-4xl" />
                 </div>
               )}
-              <button
-                className="hover:bg-gray-900 hover:p-2 flex justify-center hover:text-white "
+              <Button
+              isLoading={logoutMutation.isLoading }
+              isDisabled={logoutMutation.isLoading }
+                className="hover:bg-gray-900  flex justify-center hover:text-white "
                 onClick={Logout}
               >
-                {logoutMutation.isLoading ? (
-                  <ImSpinner2 className="text-xl animate-spin" />
-                ) : (
-                  "Log Out"
-                )}
-              </button>
+               Log Out
+              </Button>
             </div>
           </div>
         </div>
