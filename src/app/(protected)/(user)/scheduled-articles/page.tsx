@@ -25,6 +25,11 @@ enum Domains{
   "https://rias-aero.com"=1
 }
 
+enum Publish{
+  "Original"=1,
+  "ReWrite",
+  "Summary"}
+
 
 const modules = {
   toolbar: [
@@ -77,6 +82,10 @@ const columns = [
     label: "Domain"
   },
   {
+    key: "publishType",
+    label: "Publish Type"
+  },
+  {
     key: "actions",
     label: "Actions",
   },
@@ -85,6 +94,7 @@ const columns = [
 
 export default function App() {
   const [page, setPage] = useState(1);
+  console.log(Publish)
   const [tableData, setTableData] = useState([]);
   const queryClient=useQueryClient()
   const deleteScheduleMutation=useMutation((id:string)=>axiosInstance.delete(`/article/deleteArticle?id=${id}`),{
@@ -182,6 +192,14 @@ export default function App() {
                       </TableCell>
                     );
                   }
+                  if (columnKey=='publishType') {
+                    return (
+                      <TableCell className="text-black">
+                        {Publish[item[columnKey] as '1'|'2'|'3']}
+                      </TableCell>
+                    );
+                  }
+
 
                   if (item[columnKey]) {
                     return (

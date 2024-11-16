@@ -12,10 +12,10 @@ const animals = [
 
 
 
-export default function ArticlePublishingForm({control,publishMutation}:{control:Control<FieldValues>,publishMutation:any}) {
+export default function ArticlePublishingForm({control,publishMutation,link}:{control:Control<FieldValues>,publishMutation:any,link:string}) {
 
   const {field,fieldState:{error}}=useController({control:control,name:'domain',rules:{required:"Select A Domain"},defaultValue:'1'})
-  const {field:field1,fieldState:{error:error1}}=useController({control:control,name:'title',rules:{required:"Enter Article Title"}})
+  const {field:field1,fieldState:{error:error1}}=useController({control:control,name:'title',rules:{required:"Enter Article Title"},defaultValue:link})
   
 
  
@@ -40,6 +40,7 @@ export default function ArticlePublishingForm({control,publishMutation}:{control
           </Select>
 
           <Input {...field1} errorMessage={error1?.message as any}
+          defaultValue={link}
             isInvalid={!!error1} className="w-max" classNames={{
               label: "font-semibold"
             }} label="Title Of Article" labelPlacement="outside" placeholder="Enter Title" />

@@ -72,6 +72,7 @@ export default function Home() {
     register,
     handleSubmit,
     formState: { errors },
+    getValues
   } = useForm();
 
 
@@ -80,10 +81,10 @@ export default function Home() {
       console.log(data.data)
       setData(data.data)
     },
-    onError(error:any) {
-      const {message,data}=error.response.data
+    onError(error: any) {
+      const { message, data } = error.response.data
       console.log(data)
-      if(!message){
+      if (!message) {
         toast.error(data[0], {
           position: "top-right",
           autoClose: 5000,
@@ -95,7 +96,7 @@ export default function Home() {
           theme: "light",
         })
       }
-      else{
+      else {
         toast.error('Article Relevance Index is Low', {
           position: "top-right",
           autoClose: 5000,
@@ -124,8 +125,8 @@ export default function Home() {
             className="flex flex-col w-full items-center gap-8"
           >
             <Input
-            isInvalid={!!errors.keywords}
-            errorMessage={errors.keywords?.message as any}
+              isInvalid={!!errors.keywords}
+              errorMessage={errors.keywords?.message as any}
               label="Keywords"
               labelPlacement="outside"
               classNames={{ label: "!text-white" }}
@@ -135,8 +136,8 @@ export default function Home() {
               placeholder="Enter Keywords"
             />
             <Input
-             isInvalid={!!errors.url}
-             errorMessage={errors.url?.message as any}
+              isInvalid={!!errors.url}
+              errorMessage={errors.url?.message as any}
               label="Article Url"
               labelPlacement="outside"
               classNames={{ label: "!text-white" }}
@@ -146,8 +147,8 @@ export default function Home() {
               placeholder="Enter Article URL"
             />
             <Input
-             isInvalid={!!errors.relevanceIndex}
-             errorMessage={errors.relevanceIndex?.message as any}
+              isInvalid={!!errors.relevanceIndex}
+              errorMessage={errors.relevanceIndex?.message as any}
               label="Relevance Index Score"
               labelPlacement="outside"
               classNames={{ label: "!text-white" }}
@@ -171,19 +172,33 @@ export default function Home() {
         )}
         {data && <div className="w-full">
           <div className="flex gap-4 flex-wrap">
-            <div className="flex justify-between w-full items-center flex-wrap gap-4">
-            <a
-              className="underline"
-              target="_blank"
-              href={`${data.link}`}
-            >
-              {data.title}
-            </a>
-            <Button onClick={()=>setData(null)} className="bg-blue-400 sm:w-max w-full text-white">Back</Button>
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex justify-between w-full items-center flex-wrap gap-4 ">
+                <a
+                  className="underline"
+                  target="_blank"
+                  href={`${data.link}`}
+                >
+                  {data.title}
+                </a>
+                <Button onClick={() => setData(null)} className="bg-blue-400 sm:w-max w-full text-white">Back</Button>
+              </div>
+              <div className="flex gap-4 flex-wrap">
+                <p>
+                  Keywords:
+                </p>
+                <p>{getValues().keywords}</p>
+              </div>
+              <div className="flex gap-4 flex-wrap">
+                <p>
+                  Calculated Relevance Index:
+                </p>
+                <p>{data.relevanceIndex}</p>
+              </div>
             </div>
-            <Article text="Original Article" articleUrl={data.link} value={data.original}/>
-            <Article text="Rewritten Article" articleUrl={data.link} value={data.rewritten}/>
-            <Article text="Summary Article" articleUrl={data.link} value={data.summary}/>
+            <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} />
+            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} />
+            <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} />
           </div>
         </div>}
       </div>
