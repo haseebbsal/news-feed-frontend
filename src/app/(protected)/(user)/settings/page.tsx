@@ -177,7 +177,6 @@ export default function Settings() {
                     <div className="flex gap-4 flex-wrap">
                         <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="submit" isLoading={updateSettings.isLoading} isDisabled={updateSettings.isLoading} >Update Settings</Button>
                         <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="button" onClick={()=>uploadSearch.mutate()} isLoading={uploadSearch.isLoading} isDisabled={uploadSearch.isLoading} >Launch Search</Button>
-{/*  */}
 
                     </div>
 
