@@ -120,55 +120,61 @@ export default function Home() {
     <>
       <div className="w-full  h-auto flex items-center justify-center pb-4">
         {!data && (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col w-full items-center gap-8"
-          >
-            <Input
-              isInvalid={!!errors.keywords}
-              errorMessage={errors.keywords?.message as any}
-              label="Keywords"
-              labelPlacement="outside"
-              classNames={{ label: "!text-white" }}
-              type="text"
-              {...register("keywords", { required: "Enter Keywords" })}
-              id="url"
-              placeholder="Enter Keywords"
-            />
-            <Input
-              isInvalid={!!errors.url}
-              errorMessage={errors.url?.message as any}
-              label="Article Url"
-              labelPlacement="outside"
-              classNames={{ label: "!text-white" }}
-              type="text"
-              {...register("url", { required: "Enter Article Url" })}
-              id="url"
-              placeholder="Enter Article URL"
-            />
-            <Input
-              isInvalid={!!errors.relevanceIndex}
-              errorMessage={errors.relevanceIndex?.message as any}
-              label="Relevance Index Score"
-              labelPlacement="outside"
-              classNames={{ label: "!text-white" }}
-              type="number"
-              min="0"
-              max={"1"}
-              step={"0.01"}
-              {...register("relevanceIndex", { required: "Enter Relevance Index Score" })}
-              id="url"
-              placeholder="Enter Relevance Index Score"
-            />
-            <Button
-              isLoading={websiteLinkMutation.isLoading}
-              isDisabled={websiteLinkMutation.isLoading}
-              type="submit"
-              className="w-full  px-4  bg-white rounded-xl text-black "
+          <div className="flex gap-8 flex-col w-full">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col w-full items-center gap-8 p-4 border-2 rounded-lg"
             >
-              Submit
-            </Button>
-          </form>
+              <h1 className="text-xl">Search Article</h1>
+              <Input
+                isInvalid={!!errors.keywords}
+                errorMessage={errors.keywords?.message as any}
+                label="Keywords"
+                labelPlacement="outside"
+                classNames={{ label: "!text-white" }}
+                type="text"
+                {...register("keywords", { required: "Enter Keywords" })}
+                id="url"
+                placeholder="Enter Keywords"
+              />
+              <Input
+                isInvalid={!!errors.url}
+                errorMessage={errors.url?.message as any}
+                label="Article Url"
+                labelPlacement="outside"
+                classNames={{ label: "!text-white" }}
+                type="text"
+                {...register("url", { required: "Enter Article Url" })}
+                id="url"
+                placeholder="Enter Article URL"
+              />
+              <Input
+                isInvalid={!!errors.relevanceIndex}
+                errorMessage={errors.relevanceIndex?.message as any}
+                label="Relevance Index Score"
+                labelPlacement="outside"
+                classNames={{ label: "!text-white" }}
+                type="number"
+                min="0"
+                max={"1"}
+                step={"0.01"}
+                {...register("relevanceIndex", { required: "Enter Relevance Index Score" })}
+                id="url"
+                placeholder="Enter Relevance Index Score"
+              />
+              <Button
+                isLoading={websiteLinkMutation.isLoading}
+                isDisabled={websiteLinkMutation.isLoading}
+                type="submit"
+                className="w-full  px-4  bg-white rounded-xl text-black "
+              >
+                Submit
+              </Button>
+            </form>
+            <p className="text-center">Or Publish Custom Article</p>
+            <Article publishType="4" text="Custom Article" title="" articleUrl="" value="" />
+          </div>
+
         )}
         {data && <div className="w-full">
           <div className="flex gap-4 flex-wrap">

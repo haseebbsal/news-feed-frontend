@@ -6,7 +6,7 @@ import { Control, FieldValues, useController, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 const animals = [
-  { key: "1", label: "https://rias-aero.com" },
+  { key: "1", label: "https://news.rias-aero.com" },
 ];
 
 
@@ -14,7 +14,7 @@ const animals = [
 
 export default function ArticlePublishingForm({control,publishMutation,link}:{control:Control<FieldValues>,publishMutation:any,link:string}) {
 
-  const {field,fieldState:{error}}=useController({control:control,name:'domain',rules:{required:"Select A Domain"},defaultValue:'1'})
+  const {field,fieldState:{error}}=useController({control:control,name:'domain',rules:{required:"Select A Destination URL"},defaultValue:'1'})
   const {field:field1,fieldState:{error:error1}}=useController({control:control,name:'title',rules:{required:"Enter Article Title"},defaultValue:link})
   
 
@@ -25,7 +25,7 @@ export default function ArticlePublishingForm({control,publishMutation,link}:{co
         <div className="flex flex-wrap items-end gap-4">
           <Select
             items={animals}
-            label="Select Domain"
+            label="Select Destination URL"
             {...field}
             errorMessage={error?.message as any}
             isInvalid={!!error}

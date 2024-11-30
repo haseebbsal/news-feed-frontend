@@ -22,13 +22,15 @@ import Link from "next/link";
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 enum Domains{
-  "https://rias-aero.com"=1
+  "https://news.rias-aero.com"=1
 }
 
 enum Publish{
   "Original"=1,
   "ReWrite",
-  "Summary"}
+  "Summary",
+  "Custom"
+}
 
 
 const modules = {
@@ -94,7 +96,6 @@ const columns = [
 
 export default function App() {
   const [page, setPage] = useState(1);
-  console.log(Publish)
   const [tableData, setTableData] = useState([]);
   const queryClient=useQueryClient()
   const deleteScheduleMutation=useMutation((id:string)=>axiosInstance.delete(`/article/deleteArticle?id=${id}`),{

@@ -48,6 +48,7 @@ export default function Edit({ searchParams: { id } }: { searchParams: { id: str
       field.onChange(data.data.data.article)
       field1.onChange(data.data.data.title)
     },
+    refetchOnWindowFocus:false
 
   })
   const updateMutation = useMutation((data: FieldValues) => axiosInstance.put(`/article/update?id=${id}`, data), {

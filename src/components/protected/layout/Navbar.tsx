@@ -17,7 +17,7 @@ type UserInfo = {
 };
 export default function Navbar() {
   const navigate = useRouter();
-  let [userData,setUserData]=useState< UserInfo|null>(null)
+  let [userData, setUserData] = useState<UserInfo | null>(null)
 
   // console.log('cookies',Cookies)
   // if (Cookies.get("userData")) {
@@ -25,18 +25,18 @@ export default function Navbar() {
   // }
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (Cookies.get('userData')) {
-        setUserData(JSON.parse(Cookies.get('userData')!))
+      setUserData(JSON.parse(Cookies.get('userData')!))
     }
-},[])
+  }, [])
   // console.log('user data',userData)
   const individualQuery = useQuery(["individual"], () =>
     axiosInstance.get("/user/individual")
   );
   const logoutMutation = useMutation(() => axiosInstance.post("/logout"), {
     onSuccess(data) {
-      window.location.href='/login'
+      window.location.href = '/login'
       // navigate.replace("/login");
     },
   });
@@ -48,11 +48,11 @@ export default function Navbar() {
       <div className="mt-2">
         <div className="bg-blue-400 rounded-xl justify-end items-center flex gap-8 px-8 py-4 text-white box-border">
           <div className="sm:w-[55%] flex sm:justify-between sm:flex-nowrap flex-wrap w-full gap-4 items-center justify-center">
-            <Link href={"/"} className="sm:text-start text-center sm:mr-auto">
-              News Article Generator
+            <Link href={"/"} className="sm:text-start text-xl text-center sm:mr-auto">
+              Search
             </Link>
             <div className="flex items-center gap-4">
-            <Link href={"/settings"}>Settings</Link>
+              <Link href={"/settings"}>Settings</Link>
 
               <Link href={"/scheduled-articles"}>Published Articles</Link>
               {userData && (
@@ -62,12 +62,12 @@ export default function Navbar() {
                 </div>
               )}
               <Button
-              isLoading={logoutMutation.isLoading }
-              isDisabled={logoutMutation.isLoading }
+                isLoading={logoutMutation.isLoading}
+                isDisabled={logoutMutation.isLoading}
                 className="hover:bg-gray-900  flex justify-center hover:text-white "
                 onClick={Logout}
               >
-               Log Out
+                Log Out
               </Button>
             </div>
           </div>

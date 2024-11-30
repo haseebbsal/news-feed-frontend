@@ -75,7 +75,10 @@ export default function Settings() {
 
     const uploadSearch=useMutation(()=>axiosInstance.post('/article/launchSearch'),{
         onSuccess(data, variables, context) {
-            toast.success("Search Completed")
+            toast(<div className="flex flex-col gap-4">
+                <p className="text-green-400">Search Completed Successfully!</p>
+                <p>Total Articles Published: {data.data.totalPublished}/{data.data.totalArticles}</p>
+            </div>)
         },
         onError(error:any) {
             const { message, data } = error.response.data
@@ -116,7 +119,7 @@ export default function Settings() {
                 <h1 className="text-3xl">Settings</h1>
                 <form onSubmit={handleSubmit(Submit)} className="flex flex-col gap-4 sm:w-1/2 w-full">
                     <div className="flex gap-4 items-center">
-                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Domain" }} items={[{ key: '1', label: "https://rias-aero.com" }]} label="Domain" placeholder="Select Domain" control={control} />
+                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={[{ key: '1', label: "https://news.rias-aero.com" }]} label="Destination URL" placeholder="Select Destination URL" control={control} />
 
                         <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.timeCheckType ? `${getSettingsQuery.data?.data.data.timeCheckType}` : getSettingsQuery.data?.data.data.timeCheckType} name="timeOfCheck" rules={{ required: "Select Time Of Check" }} items={items} label="Time Of Check" placeholder="Select Time Of Check" control={control} />
 
@@ -177,7 +180,6 @@ export default function Settings() {
                     <div className="flex gap-4 flex-wrap">
                         <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="submit" isLoading={updateSettings.isLoading} isDisabled={updateSettings.isLoading} >Update Settings</Button>
                         <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="button" onClick={()=>uploadSearch.mutate()} isLoading={uploadSearch.isLoading} isDisabled={uploadSearch.isLoading} >Launch Search</Button>
-{/*  */}
 
                     </div>
 
