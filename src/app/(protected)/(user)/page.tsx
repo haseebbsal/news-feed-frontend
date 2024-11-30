@@ -203,7 +203,7 @@ export default function Home() {
               </div>
             </div>
             <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} />
-            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} />
+            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} articleImage={data.articleImage} />
             <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} />
           </div>
         </div>}
