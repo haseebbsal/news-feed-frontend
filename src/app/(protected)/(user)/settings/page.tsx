@@ -2,7 +2,7 @@
 
 import BaseSelect from "@/components/protected/forms/base-select"
 import axiosInstance from "@/utils/axiosInstance"
-import { Button, Input, Textarea, TimeInput } from "@nextui-org/react"
+import { Button, Checkbox, Input, Textarea, TimeInput } from "@nextui-org/react"
 import { useState } from "react"
 import { FieldValues, useController, useForm } from "react-hook-form"
 import { ImSpinner10 } from "react-icons/im"
@@ -10,6 +10,7 @@ import { MdAdd, MdDelete } from "react-icons/md"
 import { useMutation, useQuery } from "react-query"
 import { toast } from "react-toastify"
 import { Time } from "@internationalized/date";
+import { animals } from "@/utils"
 
 const timeOfCheck = {
     "1": "Once Per Day",
@@ -73,14 +74,14 @@ export default function Settings() {
         }
     })
 
-    const uploadSearch=useMutation(()=>axiosInstance.post('/article/launchSearch'),{
+    const uploadSearch = useMutation(() => axiosInstance.post('/article/launchSearch'), {
         onSuccess(data, variables, context) {
             toast(<div className="flex flex-col gap-4">
                 <p className="text-green-400">Search Completed Successfully!</p>
                 <p>Total Articles Published: {data.data.totalPublished}/{data.data.totalArticles}</p>
             </div>)
         },
-        onError(error:any) {
+        onError(error: any) {
             const { message, data } = error.response.data
             toast.error(message, {
                 position: "top-right",
@@ -112,6 +113,7 @@ export default function Settings() {
     }
 
     const { field, fieldState: { error } } = useController({ control, name: 'time', rules: { required: true } })
+
     // console.log(errors)
     return (
         <>
@@ -119,7 +121,7 @@ export default function Settings() {
                 <h1 className="text-3xl">Settings</h1>
                 <form onSubmit={handleSubmit(Submit)} className="flex flex-col gap-4 sm:w-1/2 w-full">
                     <div className="flex gap-4 items-center">
-                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={[{ key: '1', label: "https://news.rias-aero.com" }]} label="Destination URL" placeholder="Select Destination URL" control={control} />
+                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={animals} label="Destination URL" placeholder="Select Destination URL" control={control} />
 
                         <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.timeCheckType ? `${getSettingsQuery.data?.data.data.timeCheckType}` : getSettingsQuery.data?.data.data.timeCheckType} name="timeOfCheck" rules={{ required: "Select Time Of Check" }} items={items} label="Time Of Check" placeholder="Select Time Of Check" control={control} />
 
@@ -144,7 +146,7 @@ export default function Settings() {
                         <TimeInput labelPlacement="outside"  {...field} isInvalid={!!error} errorMessage={error?.message} label="Periodicity" classNames={{ label: "!text-white" }} />
                     </div>
 
-                    <div className="flex gap-4 items-center">
+                    <div className="flex flex-col gap-4 items-center">
                         <Textarea label="Keywords"
                             defaultValue={getSettingsQuery.data?.data.data.keywords}
                             {...register('keywords', { required: "Enter Keywords" })}
@@ -152,6 +154,21 @@ export default function Settings() {
                             isInvalid={!!errors.keywords}
                             classNames={{ label: "!text-white" }}
                             labelPlacement="outside" placeholder="Enter Keywords..." />
+                        <Input
+                            label="Article Limit"
+                            labelPlacement="outside"
+                            {...register('limit', { required: "Enter Article Limit", min: { value: 0, message: "Minimum Value is 0" } })}
+                            defaultValue={getSettingsQuery.data?.data.data.limit}
+                            errorMessage={errors.relevanceIndex?.message as any}
+                            isInvalid={!!errors.relevanceIndex}
+                            classNames={{ label: "!text-white" }}
+                            type="number"
+                            min="0"
+                            step={"1"}
+                            placeholder="Enter Article limit"
+                        />
+                        <Checkbox className="self-start" {...register('generateImages')} defaultSelected={getSettingsQuery.data?.data.data.generateImages}><p className="text-white">Generate Images</p></Checkbox>
+
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-4">
@@ -179,7 +196,7 @@ export default function Settings() {
                     </div>
                     <div className="flex gap-4 flex-wrap">
                         <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="submit" isLoading={updateSettings.isLoading} isDisabled={updateSettings.isLoading} >Update Settings</Button>
-                        <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="button" onClick={()=>uploadSearch.mutate()} isLoading={uploadSearch.isLoading} isDisabled={uploadSearch.isLoading} >Launch Search</Button>
+                        <Button className="bg-blue-400 sm:w-[10rem] w-full text-white" type="button" onClick={() => uploadSearch.mutate()} isLoading={uploadSearch.isLoading} isDisabled={uploadSearch.isLoading} >Launch Search</Button>
 
                     </div>
 

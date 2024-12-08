@@ -9,7 +9,7 @@ import {
   FieldValues,
   useForm,
 } from "react-hook-form";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Checkbox, Input } from "@nextui-org/react";
 import ArticlePublishingForm from "@/components/protected/forms/ArticlePublishing";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -67,6 +67,7 @@ const animals = [{ key: "1", label: "https://rias-aero.com" }];
 export default function Home() {
   const [data, setData] = useState<any>()
   const router = useRouter()
+  const [timeOfCheck,setTimeOfCheck]=useState<any>()
 
   const {
     register,
@@ -112,7 +113,9 @@ export default function Home() {
   })
 
   function onSubmit(data: FieldValues) {
+    // console.log(data)
     websiteLinkMutation.mutate(data);
+    setTimeOfCheck(new Date())
     // form.reset()
   }
 
@@ -162,6 +165,7 @@ export default function Home() {
                 id="url"
                 placeholder="Enter Relevance Index Score"
               />
+              <Checkbox className="self-start" {...register('generateImage')}><p className="text-white">Generate Images</p></Checkbox>
               <Button
                 isLoading={websiteLinkMutation.isLoading}
                 isDisabled={websiteLinkMutation.isLoading}
@@ -201,9 +205,16 @@ export default function Home() {
                 </p>
                 <p>{data.relevanceIndex}</p>
               </div>
+              <div className="flex gap-4 flex-wrap">
+                <p>
+                  Time Of Check:
+                </p>
+                <p>{timeOfCheck.toLocaleString()}</p>
+              </div>
+
             </div>
             <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} />
-            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} articleImage={data.articleImage} />
+            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten}  />
             <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} />
           </div>
         </div>}

@@ -38,7 +38,7 @@ const formats = [
   "image",
 ];
 
-export default function Article({ value, articleUrl, text, title, publishType,articleImage }: { value: string, articleUrl: string, text: string, title: string, publishType: string,articleImage?:string }) {
+export default function Article({ value, articleUrl, text, title, publishType,}: { value: string, articleUrl: string, text: string, title: string, publishType: string,}) {
   const publishMutation = useMutation(
     (data: any) => axiosInstance.post("/article/publish", data),
     {
@@ -80,9 +80,9 @@ export default function Article({ value, articleUrl, text, title, publishType,ar
     const publishData={
       ...data,
       articleUrl,
-      publishType,
-      articleImage
+      publishType
     }
+
     console.log("publishData", publishData);
     publishMutation.mutate(publishData);
   };

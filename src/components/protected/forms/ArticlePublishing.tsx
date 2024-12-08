@@ -1,13 +1,12 @@
 'use client'
+import { animals } from "@/utils";
 import axiosInstance from "@/utils/axiosInstance";
 import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
 import { useEffect } from "react";
 import { Control, FieldValues, useController, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
-const animals = [
-  { key: "1", label: "https://news.rias-aero.com" },
-];
+
 
 
 

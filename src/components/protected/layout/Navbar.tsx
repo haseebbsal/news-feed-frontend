@@ -10,6 +10,7 @@ import { CiUser } from "react-icons/ci";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
+import { GiNewspaper } from "react-icons/gi";
 type UserInfo = {
   _id: string;
   email: string;
@@ -47,8 +48,9 @@ export default function Navbar() {
     <>
       <div className="mt-2">
         <div className="bg-blue-400 rounded-xl justify-end items-center flex gap-8 px-8 py-4 text-white box-border">
-          <div className="sm:w-[55%] flex sm:justify-between sm:flex-nowrap flex-wrap w-full gap-4 items-center justify-center">
-            <Link href={"/"} className="sm:text-start text-xl text-center sm:mr-auto">
+          <div className="flex sm:justify-between sm:flex-nowrap flex-wrap w-full gap-4 items-center justify-center">
+            <Link href={"/"} className="sm:text-start flex gap-4 items-center text-center ">
+              <GiNewspaper className="text-[3rem]" />
               Search
             </Link>
             <div className="flex items-center gap-4">

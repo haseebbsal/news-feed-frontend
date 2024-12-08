@@ -221,7 +221,7 @@ export default function RegisterForm({ onClose }: { onClose: any }) {
                                 resendVerifyMutation.mutate({username})
                                 setTimer(30)
                                 timerResend()
-                            }} className="text-gray-900">resend code {timer}</button>
+                            }} className="text-gray-900">resend code in {timer}</button>
                         </div>
                         <button type="submit" className="bg-gray-900 p-2 text-white flex justify-center rounded w-full">{verifyCodeMutation.isLoading ? <ImSpinner2 className="text-lg animate-spin" /> : "Submit"}</button>
                     </form>}

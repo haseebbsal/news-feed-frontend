@@ -10,6 +10,7 @@ import { CiUser } from "react-icons/ci";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
+import { GiNewspaper } from "react-icons/gi";
 type UserInfo = {
     _id: string,
     email: string,
@@ -17,21 +18,21 @@ type UserInfo = {
 }
 export default function AdminNavbar() {
     const navigate = useRouter()
-    let [userData,setUserData]=useState< UserInfo|null>(null)
+    let [userData, setUserData] = useState<UserInfo | null>(null)
     if (Cookies.get('userData')) {
         userData = JSON.parse(Cookies.get('userData')!)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (Cookies.get('userData')) {
             setUserData(JSON.parse(Cookies.get('userData')!))
         }
-    },[])
+    }, [])
     // console.log('user data',userData)
     const individualQuery = useQuery(['individual'], () => axiosInstance.get('/user/individual'))
     const logoutMutation = useMutation(() => axiosInstance.post('/logout'), {
         onSuccess(data) {
-      window.location.href='/login'
+            window.location.href = '/login'
 
             // navigate.replace('/login')
         },
@@ -43,8 +44,11 @@ export default function AdminNavbar() {
         <>
             <div className="mt-2">
                 <div className="bg-blue-400 rounded-xl justify-end items-center flex gap-8 px-8 py-4 text-white box-border">
-                    <div className="sm:w-[55%] flex sm:justify-between sm:flex-nowrap flex-wrap w-full gap-4 items-center justify-center">
-                        <Link href={'/admin'} className="sm:text-start text-center sm:mr-auto">News Article Admin</Link>
+                    <div className=" flex sm:justify-between sm:flex-nowrap flex-wrap w-full gap-4 items-center justify-center">
+                        <Link href={"/admin"} className="sm:text-start flex gap-4 items-center text-center ">
+                            <GiNewspaper className="text-[3rem]" />
+                            News Article Admin
+                        </Link>
                         <div className="flex items-center gap-4">
                             {userData &&
                                 <div className="flex gap-4 items-center">
@@ -53,13 +57,13 @@ export default function AdminNavbar() {
                                 </div>
                             }
                             <Button
-              isLoading={logoutMutation.isLoading }
-              isDisabled={logoutMutation.isLoading }
-                className="hover:bg-gray-900  flex justify-center hover:text-white "
-                onClick={Logout}
-              >
-               Log Out
-              </Button>
+                                isLoading={logoutMutation.isLoading}
+                                isDisabled={logoutMutation.isLoading}
+                                className="hover:bg-gray-900  flex justify-center hover:text-white "
+                                onClick={Logout}
+                            >
+                                Log Out
+                            </Button>
                         </div>
                     </div>
                 </div>

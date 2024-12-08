@@ -19,14 +19,13 @@ import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 import { CiEdit } from "react-icons/ci";
 import Link from "next/link";
+import DeleteArticle from "@/components/protected/PublishedArticleRow";
+import { Domains } from "@/utils";
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
-enum Domains{
-  "https://news.rias-aero.com"=1
-}
 
-enum Publish{
-  "Original"=1,
+enum Publish {
+  "Original" = 1,
   "ReWrite",
   "Summary",
   "Custom"
@@ -72,8 +71,8 @@ const columns = [
     label: "ARTICLE TITLE",
   },
   {
-    key:"article",
-    label:"Article"
+    key: "article",
+    label: "Article"
   },
   {
     key: "createdAt",
@@ -97,8 +96,8 @@ const columns = [
 export default function App() {
   const [page, setPage] = useState(1);
   const [tableData, setTableData] = useState([]);
-  const queryClient=useQueryClient()
-  const deleteScheduleMutation=useMutation((id:string)=>axiosInstance.delete(`/article/deleteArticle?id=${id}`),{
+  const queryClient = useQueryClient()
+  const deleteScheduleMutation = useMutation((id: string) => axiosInstance.delete(`/article/deleteArticle?id=${id}`), {
     onSuccess(data, variables, context) {
       toast.success('Article Deleted Successfully', {
         position: "top-right",
@@ -109,10 +108,10 @@ export default function App() {
         draggable: true,
         progress: undefined,
         theme: "light",
-    })
-    queryClient.invalidateQueries('scheduledArticles')
+      })
+      queryClient.invalidateQueries('scheduledArticles')
     },
-    onError(error:any) {
+    onError(error: any) {
       toast.error('Error In Deleting  Article', {
         position: "top-right",
         autoClose: 5000,
@@ -122,7 +121,7 @@ export default function App() {
         draggable: true,
         progress: undefined,
         theme: "light",
-    })
+      })
     },
   })
   const { isLoading, data, isFetching } = useQuery(
@@ -158,45 +157,44 @@ export default function App() {
             {(item: any) => (
               <TableRow key={item.no}>
                 {(columnKey) => {
-                  if(columnKey=='actions'){
+                  if (columnKey == 'actions') {
                     return (
                       <TableCell className="text-black w-max">
                         <div className="flex gap-2 w-max">
-                        <Link href={`/scheduled-articles/edit?id=${item.articleId}`}  className="bg-blue-100 px-8 flex items-center rounded-xl">
-                        <CiEdit className="text-xl text-blue-600" /></Link>
-                        <Button isLoading={deleteScheduleMutation.isLoading} disabled={deleteScheduleMutation.isLoading} onClick={()=>deleteScheduleMutation.mutate(item.articleId)} className="bg-red-100">
-                        <MdDelete className="text-xl text-red-600" /></Button>
+                          <Link href={`/scheduled-articles/edit?id=${item.articleId}`} className="bg-blue-100 px-8 flex items-center rounded-xl">
+                            <CiEdit className="text-xl text-blue-600" /></Link>
+                          <DeleteArticle item={item}/>
 
                         </div>
-                     
+
                       </TableCell>
                     );
                   }
-                  if(columnKey=='article'){
+                  if (columnKey == 'article') {
                     return (
                       <TableCell className="publish w-[40rem]">
                         <ReactQuill
-                  theme="snow"
-                  className="text-black w-full"
-                  formats={formats}
-                  modules={modules}
-                  value={item[columnKey]}
-                />
+                          theme="snow"
+                          className="text-black w-full"
+                          formats={formats}
+                          modules={modules}
+                          value={item[columnKey]}
+                        />
                       </TableCell>
                     )
                   }
 
-                  if (columnKey=='domain') {
+                  if (columnKey == 'domain') {
                     return (
                       <TableCell className="text-black">
                         {Domains[item[columnKey]]}
                       </TableCell>
                     );
                   }
-                  if (columnKey=='publishType') {
+                  if (columnKey == 'publishType') {
                     return (
                       <TableCell className="text-black">
-                        {Publish[item[columnKey] as '1'|'2'|'3']}
+                        {Publish[item[columnKey] as '1' | '2' | '3']}
                       </TableCell>
                     );
                   }
