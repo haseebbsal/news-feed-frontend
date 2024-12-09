@@ -14,7 +14,7 @@ export default function Domains() {
     const addDomainMutation=useMutation((data:any)=>axiosInstance.post('/admin/domains',data),{
         onSuccess(data, variables, context) {
             console.log('added domain',data.data.data)
-            toast.success('Domains Updated Successfulyy')
+            toast.success('Domains Updated Successfully')
         },
     })
 
