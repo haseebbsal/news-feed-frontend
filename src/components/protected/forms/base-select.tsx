@@ -7,14 +7,15 @@ interface SelectPropss extends Omit<SelectProps,'children'> {
     control: any,
     rules: Omit<RegisterOptions<FieldValues, string>, "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"> | undefined,
     name: string,
-    children?:any
+    children?:any,
+    items:{domain:string}[]
 }
 export default function BaseSelect({ control, name, rules, items, label, placeholder,defaultSelectedKeys,selectedKeys }: SelectPropss) {
     const { field, fieldState: { error } } = useController({ control, name, rules,defaultValue:defaultSelectedKeys })
     return (
         <>
             <Select
-                items={items}
+                // items={items}
                 label={label}
                 // {...field}
                 placeholder={placeholder}
@@ -29,7 +30,9 @@ export default function BaseSelect({ control, name, rules, items, label, placeho
                     label: "font-semibold !text-white"
                 }}
             >
-                {(animal: any) => <SelectItem key={animal.key}>{animal.label}</SelectItem>}
+                {items?.map((e,index:number)=><SelectItem key={index+1}>{e.domain}</SelectItem>)}
+                
+                {/* {(animal: any,index:number) => <SelectItem key={}>{animal.domain}</SelectItem>} */}
             </Select>
         </>
     )

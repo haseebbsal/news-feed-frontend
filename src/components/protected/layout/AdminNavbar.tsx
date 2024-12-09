@@ -50,6 +50,9 @@ export default function AdminNavbar() {
                             News Article Admin
                         </Link>
                         <div className="flex items-center gap-4">
+                            <Link href={"/admin/domains"} className="sm:text-start flex gap-4 items-center text-center ">
+                                Domains
+                            </Link>
                             {userData &&
                                 <div className="flex gap-4 items-center">
                                     <p>{userData.username}</p>

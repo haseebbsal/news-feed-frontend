@@ -24,14 +24,14 @@ const timeOfCheck = {
 }
 
 const items = [
-    { key: 1, label: "Once Per Day" },
-    { key: 2, label: 'Once Per 3 Days' },
-    { key: 3, label: 'Once Per Week' },
-    { key: 4, label: 'Once Per 2 Weeks' },
-    { key: 5, label: 'Once Per Month' },
-    { key: 6, label: 'Once Per 3 Months' },
-    { key: 7, label: 'Once Per 6 Months' },
-    { key: 8, label: 'Once Per Year' },
+    {  domain: "Once Per Day" },
+    {  domain: 'Once Per 3 Days' },
+    {  domain: 'Once Per Week' },
+    {  domain: 'Once Per 2 Weeks' },
+    {  domain: 'Once Per Month' },
+    {  domain: 'Once Per 3 Months' },
+    {  domain: 'Once Per 6 Months' },
+    {  domain: 'Once Per Year' },
 ]
 
 
@@ -114,20 +114,22 @@ export default function Settings() {
 
     const { field, fieldState: { error } } = useController({ control, name: 'time', rules: { required: true } })
 
+    const getDomainsQuery=useQuery(['domains'],()=>axiosInstance.get('/admin/domains'))
+
     // console.log(errors)
     return (
         <>
-            {!getSettingsQuery.isLoading && <div className="flex flex-col gap-4 w-full">
+            {!getSettingsQuery.isLoading && !getDomainsQuery.isLoading && <div className="flex flex-col gap-4 w-full">
                 <h1 className="text-3xl">Settings</h1>
                 <form onSubmit={handleSubmit(Submit)} className="flex flex-col gap-4 sm:w-1/2 w-full">
                     <div className="flex gap-4 items-center">
-                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={animals} label="Destination URL" placeholder="Select Destination URL" control={control} />
+                        <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={getDomainsQuery.data?.data.data.domains} label="Destination URL" placeholder="Select Destination URL" control={control} />
 
                         <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.timeCheckType ? `${getSettingsQuery.data?.data.data.timeCheckType}` : getSettingsQuery.data?.data.data.timeCheckType} name="timeOfCheck" rules={{ required: "Select Time Of Check" }} items={items} label="Time Of Check" placeholder="Select Time Of Check" control={control} />
 
                     </div>
                     <div className="flex gap-4 items-center">
-                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.publishType} name="publishType" rules={{ required: "Select Publish Type" }} items={[{ key: '1', label: "Original" }, { key: '2', label: "Rewrite" }, { key: '3', label: "Summary" }]} label="Publish Type" placeholder="Select Publish Type" control={control} />
+                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.publishType} name="publishType" rules={{ required: "Select Publish Type" }} items={[{  domain: "Original" }, { domain: "Rewrite" }, { domain: "Summary" }]} label="Publish Type" placeholder="Select Publish Type" control={control} />
                         <Input
                             label="Relevance Index Score"
                             labelPlacement="outside"
