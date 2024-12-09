@@ -24,6 +24,8 @@ export default function Domains() {
         },
     })
 
+    // wwfww
+
     const getDomainsQuery=useQuery(['domains'],()=>axiosInstance.get('/admin/domains'),{
         onSuccess(data) {
             setDomains(data.data.data.domains)
