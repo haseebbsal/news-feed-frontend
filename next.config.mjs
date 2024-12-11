@@ -29,16 +29,21 @@ const nextConfig = {
                     },
                     {
                         key: 'Referrer-Policy',
-                        value: 'origin-when-cross-origin'
+                        value: 'strict-origin-when-cross-origin'
                     },
                     {
                         key: 'Permissions-Policy',
                         value: 'geolocation=(), browsing-topics=()'
+                    },
+                    {
+                        key: 'Content-Security-Policy',
+                        value: "default-src *; script-src 'unsafe-inline' 'unsafe-eval' *; style-src 'unsafe-inline' *; img-src *; font-src *; connect-src *; media-src *; object-src *; frame-src *;"
                     }
                 ],
             },
         ];
     }
 };
+
 
 export default nextConfig;

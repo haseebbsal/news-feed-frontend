@@ -125,7 +125,7 @@ export default function Settings() {
                     <div className="flex gap-4 items-center">
                         <BaseSelect name="domain" defaultSelectedKeys={getSettingsQuery.data?.data.data.domain} rules={{ required: "Select Destination URL" }} items={getDomainsQuery.data?.data.data.domains} label="Destination URL" placeholder="Select Destination URL" control={control} />
 
-                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.timeCheckType ? `${getSettingsQuery.data?.data.data.timeCheckType}` : getSettingsQuery.data?.data.data.timeCheckType} name="timeOfCheck" rules={{ required: "Select Time Of Check" }} items={items} label="Time Of Check" placeholder="Select Time Of Check" control={control} />
+                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.timeCheckType ? `${getSettingsQuery.data?.data.data.timeCheckType}` : getSettingsQuery.data?.data.data.timeCheckType} name="timeOfCheck" rules={{ required: "Select Time Of Check" }} items={items} label="Periodicity" placeholder="Select Time Of Check" control={control} />
 
                     </div>
                     <div className="flex gap-4 items-center">
@@ -145,7 +145,7 @@ export default function Settings() {
                             id="url"
                             placeholder="Enter Relevance Index Score"
                         />
-                        <TimeInput labelPlacement="outside"  {...field} isInvalid={!!error} errorMessage={error?.message} label="Periodicity" classNames={{ label: "!text-white" }} />
+                        <TimeInput labelPlacement="outside"  {...field} isInvalid={!!error} errorMessage={error?.message} label="Time Of Check" classNames={{ label: "!text-white" }} />
                     </div>
 
                     <div className="flex flex-col gap-4 items-center">
