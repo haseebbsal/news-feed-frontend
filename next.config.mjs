@@ -34,14 +34,13 @@ const nextConfig = {
                     {
                         key: 'Permissions-Policy',
                         value: 'geolocation=(), browsing-topics=()'
-                    },
-                    {
-                        key: 'Content-Security-Policy',
-                        value: "default-src *; script-src 'unsafe-inline' 'unsafe-eval' *; style-src 'unsafe-inline' *; img-src *; font-src *; connect-src *; media-src *; object-src *; frame-src *;"
                     }
                 ],
             },
         ];
+    },
+    images:{
+        domains:['news-bucket.nyc3.digitaloceanspaces.com']
     }
 };
 

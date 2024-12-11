@@ -67,7 +67,7 @@ const animals = [{ key: "1", label: "https://rias-aero.com" }];
 export default function Home() {
   const [data, setData] = useState<any>()
   const router = useRouter()
-  const [timeOfCheck,setTimeOfCheck]=useState<any>()
+  const [timeOfCheck, setTimeOfCheck] = useState<any>()
 
   const {
     register,
@@ -214,7 +214,7 @@ export default function Home() {
 
             </div>
             <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} />
-            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten}  />
+            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} />
             <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} />
           </div>
         </div>}

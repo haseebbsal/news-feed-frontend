@@ -58,10 +58,10 @@ export default function Navbar() {
 
               <Link href={"/scheduled-articles"}>Published Articles</Link>
               {userData && (
-                <div className="flex gap-4 items-center">
+                <Link href={'/profile'} className="flex gap-4 items-center">
                   <p>{userData.username}</p>
                   <CiUser className="p-2 bg-black rounded-full text-4xl" />
-                </div>
+                </Link>
               )}
               <Button
                 isLoading={logoutMutation.isLoading}
