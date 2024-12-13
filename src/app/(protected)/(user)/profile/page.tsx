@@ -46,7 +46,7 @@ export default function Profile() {
         <div className="flex flex-col gap-4">
             <h1>Profile</h1>
             <form onSubmit={handleSubmit(profileSubmit)} className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4 relative">
+                <div className="flex flex-col gap-4 relative w-max">
                     <div className="h-[12rem] w-[12rem] border-2 text-4xl rounded-lg flex justify-center items-center">
                         {!getProfileQuery.isLoading && <>
                             {!getProfileQuery.data?.data.data.defaultImage && !imageSrc && <FiUpload className="text-white" />}
