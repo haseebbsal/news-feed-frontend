@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "react-query"
 import { toast } from "react-toastify"
 import { Time } from "@internationalized/date";
 import { animals } from "@/utils"
+import { url } from "inspector"
 
 const timeOfCheck = {
     "1": "Once Per Day",
@@ -24,14 +25,14 @@ const timeOfCheck = {
 }
 
 const items = [
-    {  domain: "Once Per Day" },
-    {  domain: 'Once Per 3 Days' },
-    {  domain: 'Once Per Week' },
-    {  domain: 'Once Per 2 Weeks' },
-    {  domain: 'Once Per Month' },
-    {  domain: 'Once Per 3 Months' },
-    {  domain: 'Once Per 6 Months' },
-    {  domain: 'Once Per Year' },
+    { domain: "Once Per Day" },
+    { domain: 'Once Per 3 Days' },
+    { domain: 'Once Per Week' },
+    { domain: 'Once Per 2 Weeks' },
+    { domain: 'Once Per Month' },
+    { domain: 'Once Per 3 Months' },
+    { domain: 'Once Per 6 Months' },
+    { domain: 'Once Per Year' },
 ]
 
 
@@ -114,9 +115,10 @@ export default function Settings() {
 
     const { field, fieldState: { error } } = useController({ control, name: 'time', rules: { required: true } })
 
-    const getDomainsQuery=useQuery(['domains'],()=>axiosInstance.get('/admin/domains'))
+    const getDomainsQuery = useQuery(['domains'], () => axiosInstance.get('/admin/domains'))
 
     // console.log(errors)
+    console.log(urls)
     return (
         <>
             {!getSettingsQuery.isLoading && !getDomainsQuery.isLoading && <div className="flex flex-col gap-4 w-full">
@@ -129,7 +131,7 @@ export default function Settings() {
 
                     </div>
                     <div className="flex gap-4 items-center">
-                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.publishType} name="publishType" rules={{ required: "Select Publish Type" }} items={[{  domain: "Original" }, { domain: "Rewrite" }, { domain: "Summary" }]} label="Publish Type" placeholder="Select Publish Type" control={control} />
+                        <BaseSelect defaultSelectedKeys={getSettingsQuery.data?.data.data.publishType} name="publishType" rules={{ required: "Select Publish Type" }} items={[{ domain: "Original" }, { domain: "Rewrite" }, { domain: "Summary" }]} label="Publish Type" placeholder="Select Publish Type" control={control} />
                         <Input
                             label="Relevance Index Score"
                             labelPlacement="outside"
@@ -178,17 +180,22 @@ export default function Settings() {
                             <Button onClick={() => setUrls((prev: any) => [...prev, ''])} className="bg-green-100">
                                 <MdAdd className="text-xl text-green-600" /></Button>
                         </div>
-                        {urls.map((e: string, index: number) => <div className="flex gap-4 justify-between">
+                        {urls.map((e: string, index: number) => <div key={index} className="flex gap-4 justify-between">
                             <Input
                                 {...register(`urls.${index}`, { required: "Enter RSS Feed" })}
+                                onChange={(e) => {
+                                    setUrls(urls.map((initial: any, i: number) => index == i ? e.target.value : initial))
+                                }}
                                 defaultValue={e}
+                                value={e}
                                 errorMessage={(errors as any).urls?.[index]?.message as any}
                                 isInvalid={!!(errors as any).urls?.[index]}
-                                classNames={{ label: "!text-white" }}
+                                classNames={{ label: "!text-white", input: "text-black" }}
                                 type="text"
                                 id="url"
                                 placeholder="Enter RSS Feed URL"
                             /><Button onClick={() => {
+                                console.log(index)
                                 setUrls(urls.filter((_: any, i: number) => i != index))
                                 setValue('urls', urls.filter((_: any, i: number) => i != index))
                             }
