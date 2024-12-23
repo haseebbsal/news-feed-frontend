@@ -11,11 +11,10 @@ import { toast } from "react-toastify";
 
 
 
-export default function ArticlePublishingForm({ control, publishMutation, link }: { control: Control<FieldValues>, publishMutation: any, link: string }) {
+export default function ArticlePublishingForm({ control, publishMutation, link,defaultValue }: { control: Control<FieldValues>, publishMutation: any, link: string,defaultValue:string }) {
 
-  const { field, fieldState: { error } } = useController({ control: control, name: 'domain', rules: { required: "Select A Destination URL" }, defaultValue: '1' })
+  const { field, fieldState: { error } } = useController({ control: control, name: 'domain', rules: { required: "Select A Destination URL" }, defaultValue })
   const { field: field1, fieldState: { error: error1 } } = useController({ control: control, name: 'title', rules: { required: "Enter Article Title" }, defaultValue: link })
-
   const getDomainsQuery = useQuery(['domains'], () => axiosInstance.get('/admin/domains'))
 
   return (
@@ -28,7 +27,7 @@ export default function ArticlePublishingForm({ control, publishMutation, link }
             errorMessage={error?.message as any}
             isInvalid={!!error}
             labelPlacement="outside"
-            defaultSelectedKeys={'1'}
+            defaultSelectedKeys={[defaultValue]}
             className="max-w-xs"
             classNames={{
               label: "font-semibold"

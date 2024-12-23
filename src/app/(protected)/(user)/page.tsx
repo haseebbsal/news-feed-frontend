@@ -1,7 +1,7 @@
 "use client";
 import axiosInstance from "@/utils/axiosInstance";
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
@@ -119,6 +119,8 @@ export default function Home() {
     // form.reset()
   }
 
+  const getProfileQuery = useQuery(['profile'], () => axiosInstance.get('/user/profile'))
+
   return (
     <>
       <div className="w-full  h-auto flex items-center justify-center pb-4">
@@ -175,8 +177,11 @@ export default function Home() {
                 Submit
               </Button>
             </form>
-            <p className="text-center">Or Publish Custom Article</p>
-            <Article publishType="4" text="Custom Article" title="" articleUrl="" value="" />
+            {!getProfileQuery.isLoading && <>
+              <p className="text-center">Or Publish Custom Article</p>
+              <Article publishType="4" text="Custom Article" title="" articleUrl="" value="" domainDefaultValue={getProfileQuery.data?.data.data.defaultDomain} />
+            </>}
+
           </div>
 
         )}
@@ -213,9 +218,9 @@ export default function Home() {
               </div>
 
             </div>
-            <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} />
-            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} />
-            <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} />
+            <Article publishType="1" text="Original Article" title={data.title} articleUrl={data.link} value={data.original} domainDefaultValue={getProfileQuery.data?.data.data.defaultDomain} />
+            <Article publishType="2" text="Rewritten Article" title={data.title} articleUrl={data.link} value={data.rewritten} domainDefaultValue={getProfileQuery.data?.data.data.defaultDomain} />
+            <Article publishType="3" text="Summary Article" title={data.title} articleUrl={data.link} value={data.summary} domainDefaultValue={getProfileQuery.data?.data.data.defaultDomain} />
           </div>
         </div>}
       </div>

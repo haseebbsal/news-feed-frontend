@@ -163,7 +163,7 @@ export default function App() {
                         <div className="flex gap-2 w-max">
                           <Link href={`/scheduled-articles/edit?id=${item.articleId}`} className="bg-blue-100 px-8 flex items-center rounded-xl">
                             <CiEdit className="text-xl text-blue-600" /></Link>
-                          <DeleteArticle item={item}/>
+                          <DeleteArticle item={item} />
 
                         </div>
 
@@ -215,16 +215,6 @@ export default function App() {
         }
       </Table>
       <div className="mt-8 mb-8 flex justify-center gap-4">
-        {!!data?.data.nextPage && (
-          <Button
-            onClick={() => {
-              setPage(page + 1);
-            }}
-            className="bg-blue-600 p-2 text-white min-w-[10rem] "
-          >
-            Next Page
-          </Button>
-        )}
         {page != 1 && (
           <Button
             onClick={() => {
@@ -233,6 +223,17 @@ export default function App() {
             className="bg-blue-600 p-2 text-white min-w-[10rem] "
           >
             Previous Page
+          </Button>
+        )}
+        
+        {!!data?.data.nextPage && (
+          <Button
+            onClick={() => {
+              setPage(page + 1);
+            }}
+            className="bg-blue-600 p-2 text-white min-w-[10rem] "
+          >
+            Next Page
           </Button>
         )}
       </div>

@@ -38,7 +38,7 @@ const formats = [
   "image",
 ];
 
-export default function Article({ value, articleUrl, text, title, publishType,}: { value: string, articleUrl: string, text: string, title: string, publishType: string,}) {
+export default function Article({ value, articleUrl, text, title, publishType,domainDefaultValue }: { value: string, articleUrl: string, text: string, title: string, publishType: string,domainDefaultValue:string }) {
   const publishMutation = useMutation(
     (data: any) => axiosInstance.post("/article/publish", data),
     {
@@ -77,7 +77,7 @@ export default function Article({ value, articleUrl, text, title, publishType,}:
   const { control, handleSubmit } = useForm()
 
   const publishSubmit = (data: FieldValues) => {
-    const publishData={
+    const publishData = {
       ...data,
       articleUrl,
       publishType
@@ -106,6 +106,7 @@ export default function Article({ value, articleUrl, text, title, publishType,}:
           <div className="flex items-start gap-1  pb-4 flex-col">
             <h1 className="font-semibold">Publish Now</h1>
             <ArticlePublishingForm
+              defaultValue={domainDefaultValue}
               link={title}
               control={control}
               publishMutation={publishMutation}

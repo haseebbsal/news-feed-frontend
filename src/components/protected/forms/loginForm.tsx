@@ -17,6 +17,9 @@ type LoginData = {
     email: string,
     password:string
 }
+
+
+
 export default function LoginForm() {
     const navigate = useRouter()
     const [isVisible, toggleVisibility] = useState(false)
